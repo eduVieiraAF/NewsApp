@@ -30,7 +30,6 @@ fun DetailScreen(navController: NavController) {
             fontSize = 16.sp
         )
 
-
         OutlinedButton(
             onClick = {
                 // ? navController.navigate("TopNews")

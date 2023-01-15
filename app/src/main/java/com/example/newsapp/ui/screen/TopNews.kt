@@ -38,9 +38,9 @@ fun TopNews(navController: NavController) {
         )
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-          items(MockData.topNewsList) { newsData ->
-              TopNewsItem(newsData = newsData)
-          }
+            items(MockData.topNewsList) { newsData ->
+                TopNewsItem(newsData = newsData)
+            }
         }
     }
 }
@@ -79,8 +79,6 @@ fun TopNewsItem(newsData: NewsData) {
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
-
-
         }
     }
 }

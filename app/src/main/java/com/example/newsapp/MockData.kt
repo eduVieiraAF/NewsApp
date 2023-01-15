@@ -1,7 +1,7 @@
 package com.example.newsapp
 
 object MockData {
-    val topNewsList = listOf<NewsData>(
+    val topNewsList = listOf(
         NewsData(
             1,
             author = "Raja Razek, CNN",
