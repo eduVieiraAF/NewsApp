@@ -15,9 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapp.NewsData
+import com.example.newsapp.R
 
 @Composable
-fun DetailScreen(navController: NavController) {
+fun DetailScreen(navController: NavController, newsData: NewsData) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,7 +38,7 @@ fun DetailScreen(navController: NavController) {
                 navController.popBackStack()
             },
         ) {
-            Text(text = "Go to Top News", color = Color.DarkGray)
+            Text(text = "Go to Top News + ${newsData.author}", color = Color.DarkGray)
         }
     }
 }
@@ -44,5 +46,14 @@ fun DetailScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun ShowDetailScreen() {
-    DetailScreen(rememberNavController())
+    DetailScreen(
+        rememberNavController(), NewsData(
+            4,
+            R.drawable.michael,
+            author = "Mike Florio",
+            title = "Aaron Rodgers violated COVID protocol by doing maskless indoor press conferences - NBC Sports",
+            description = "Packers quarterback Aaron Rodgers has been conducting in-person press conferences in the Green Bay facility without wearing a mask. Because he was secretly unvaccinated, Rodgers violated the rules.",
+            publishedAt = "2021-11-04T03:21:00Z"
+        )
+    )
 }
