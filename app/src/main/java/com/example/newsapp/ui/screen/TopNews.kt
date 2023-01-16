@@ -1,15 +1,16 @@
 package com.example.newsapp.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,8 +22,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.MockData
 import com.example.newsapp.NewsData
-import com.example.newsapp.R
-
+import com.example.newsapp.ui.theme.Slate500
+import com.example.newsapp.ui.theme.Slate700
 
 @Composable
 fun TopNews(navController: NavController) {
@@ -35,8 +36,14 @@ fun TopNews(navController: NavController) {
         Text(
             text = "Top News",
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp
+            fontSize = 38.sp,
+            color = Slate700,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 8.dp)
         )
+
+        Divider(color = Slate500, modifier = Modifier.padding(top = 8.dp))
+        Divider(color = Slate500, modifier = Modifier.padding(top = 2.dp, bottom = 2.dp))
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(MockData.topNewsList) { newsData ->
@@ -53,60 +60,58 @@ fun TopNews(navController: NavController) {
 
 @Composable
 fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
-    Box(
+    Row(
         modifier = Modifier
-            .height(230.dp)
+            .height(130.dp)
             .padding(8.dp)
             .clickable { onNewsClicked() }
     ) {
         Image(
             painter = painterResource(id = newsData.image),
             contentDescription = newsData.title,
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .padding(horizontal = 50.dp)
+                .border(1.dp, color = Slate700)
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(16.dp)
+            .clickable { onNewsClicked() },
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+
+        Text(
+            text = newsData.title,
+            color = Slate700,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
         )
 
-        Column(
+        Text(
+            text = newsData.publishedAt,
+            color = Slate700,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
             modifier = Modifier
-                .wrapContentHeight()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = newsData.publishedAt, color
-                = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
+                .padding(8.dp)
+                .fillMaxWidth(),
+        )
 
-            Spacer(modifier = Modifier.height(80.dp))
-
-            Text(
-                text = newsData.title,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center
-            )
-        }
+        Divider(color = Slate500, modifier = Modifier.padding(vertical = 6.dp))
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun ShowTopNews() {
     TopNews(rememberNavController())
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ShowNewsItem() {
-    TopNewsItem(
-        newsData = NewsData(
-            7,
-            R.drawable.thomas,
-            author = "Thomas Barrabi",
-            title = "Sen. Murkowski slams Dems over 'show votes' on federal election bills - Fox News",
-            description = "Sen. Lisa Murkowski, R-Alaska, slammed Senate Democrats for pursuing “show votes” on federal election bills on Wednesday as Republicans used the filibuster to block consideration the John Lewis Voting Rights Advancement Act.",
-            publishedAt = "2021-11-04T01:57:36Z"
-        )
-    )
 }

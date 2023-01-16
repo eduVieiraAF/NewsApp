@@ -1,45 +1,102 @@
 package com.example.newsapp.ui.screen
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.OutlinedButton
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.NewsData
 import com.example.newsapp.R
+import com.example.newsapp.ui.theme.Slate500
+import com.example.newsapp.ui.theme.Slate700
 
 @Composable
-fun DetailScreen(navController: NavController, newsData: NewsData) {
+fun DetailScreen(scrollState: ScrollState, newsData: NewsData) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(2.dp),
+            .padding(2.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Detail Screen",
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp
+            text = newsData.title,
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            fontSize = 20.sp,
+            color = Slate700,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 6.dp)
         )
 
-        OutlinedButton(
-            onClick = {
-                // ? navController.navigate("TopNews")
-                navController.popBackStack()
-            },
+        Image(
+            painter = painterResource(id = newsData.image),
+            contentDescription = newsData.title
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Go to Top News + ${newsData.author}", color = Color.DarkGray)
+            InfoWithIcon(
+                icon = Icons.Default.Edit,
+                info = newsData.author
+            )
+            InfoWithIcon(
+                icon = Icons.Default.DateRange,
+                info = newsData.publishedAt
+            )
+
+
         }
+
+        Text(
+            text = newsData.description,
+            textAlign = TextAlign.Center,
+            color = Slate700,
+            fontSize = 18.sp,
+        )
+    }
+}
+
+@Composable
+fun InfoWithIcon(icon: ImageVector, info: String) {
+    Row {
+        Icon(
+            icon,
+            contentDescription = "Author",
+            modifier = Modifier
+                .padding(8.dp),
+            colorResource(id = R.color.slate500)
+        )
+
+        Text(
+            text = info,
+            color = Slate500,
+            fontSize = 14.sp,
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }
 
@@ -47,7 +104,7 @@ fun DetailScreen(navController: NavController, newsData: NewsData) {
 @Composable
 fun ShowDetailScreen() {
     DetailScreen(
-        rememberNavController(), NewsData(
+        rememberScrollState(), NewsData(
             4,
             R.drawable.michael,
             author = "Mike Florio",
