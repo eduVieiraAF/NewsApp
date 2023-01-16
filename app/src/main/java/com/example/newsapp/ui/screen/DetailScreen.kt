@@ -5,6 +5,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -50,7 +51,8 @@ fun DetailScreen(scrollState: ScrollState, newsData: NewsData) {
 
         Image(
             painter = painterResource(id = newsData.image),
-            contentDescription = newsData.title
+            contentDescription = newsData.title,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Row(
@@ -67,15 +69,16 @@ fun DetailScreen(scrollState: ScrollState, newsData: NewsData) {
                 icon = Icons.Default.DateRange,
                 info = newsData.publishedAt
             )
-
-
         }
+
+        Divider(color = Slate700, modifier = Modifier.padding(bottom = 16.dp))
 
         Text(
             text = newsData.description,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Justify,
             color = Slate700,
             fontSize = 18.sp,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)
         )
     }
 }
@@ -95,7 +98,7 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
             text = info,
             color = Slate500,
             fontSize = 14.sp,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.padding(10.dp)
         )
     }
 }
