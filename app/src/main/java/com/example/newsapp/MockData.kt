@@ -1,5 +1,11 @@
 package com.example.newsapp
 
+import android.os.Build
+import android.util.Log
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+
 object MockData {
     val topNewsList = listOf(
         NewsData(
