@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapp.MockData
+import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.NewsData
 import com.example.newsapp.R
 import com.example.newsapp.ui.theme.Slate500
@@ -70,7 +72,7 @@ fun DetailScreen(scrollState: ScrollState, newsData: NewsData, navController: Na
                 )
                 InfoWithIcon(
                     icon = Icons.Default.DateRange,
-                    info = newsData.publishedAt
+                    info = MockData.stringToDate(newsData.publishedAt).getTimeAgo()
                 )
             }
 

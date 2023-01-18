@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.MockData
+import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.NewsData
 import com.example.newsapp.ui.theme.Slate500
 import com.example.newsapp.ui.theme.Slate700
@@ -96,7 +97,7 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
         )
 
         Text(
-            text = newsData.publishedAt,
+            text = MockData.stringToDate(newsData.publishedAt).getTimeAgo(),
             color = Slate700,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
