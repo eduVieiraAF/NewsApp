@@ -72,7 +72,7 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
             contentDescription = newsData.title,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
-                .padding(horizontal = 50.dp)
+                .padding(horizontal = 70.dp)
                 .border(1.dp, color = Slate700)
         )
     }
@@ -80,7 +80,7 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
-            .padding(16.dp)
+            .padding(18.dp)
             .clickable { onNewsClicked() },
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -97,12 +97,12 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
         )
 
         Text(
-            text = MockData.stringToDate(newsData.publishedAt).getTimeAgo(),
+            text = "|| ${MockData.stringToDate(newsData.publishedAt).getTimeAgo()} ||",
             color = Slate700,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(8.dp)
+                .padding(21.dp)
                 .fillMaxWidth(),
         )
 

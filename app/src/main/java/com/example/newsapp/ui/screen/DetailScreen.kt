@@ -5,9 +5,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,7 +98,7 @@ fun DetailTopBar(onBackPressed: () -> Unit = {}) {
         navigationIcon = {
             IconButton(onClick = { onBackPressed() }) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
+                    imageVector = Icons.Default.Close,
                     contentDescription = "Back button"
                 )
             }

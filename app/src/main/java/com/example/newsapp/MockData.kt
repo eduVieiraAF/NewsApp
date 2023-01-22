@@ -21,7 +21,7 @@ object MockData {
             author = "Namita Singh",
             title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
             description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",
-            publishedAt = "2021-11-04T04:42:40Z"
+            publishedAt = "2022-07-04T04:42:40Z"
         ),
         NewsData(
             3,
@@ -30,7 +30,7 @@ object MockData {
             title = "'You are not alone': EU Parliament delegation tells Taiwan on first official visit - Reuters",
             description =
             "The European Parliament's first official delegation to Taiwan said on Thursday the diplomatically isolated island is not alone and called for bolder actions to strengthen EU-Taiwan ties as Taipei faces rising pressure from Beijing.",
-            publishedAt = "2021-11-04T03:37:00Z"
+            publishedAt = "2023-01-04T03:37:00Z"
         ),
         NewsData(
             4,
@@ -38,7 +38,7 @@ object MockData {
             author = "Mike Florio",
             title = "Aaron Rodgers violated COVID protocol by doing maskless indoor press conferences - NBC Sports",
             description = "Packers quarterback Aaron Rodgers has been conducting in-person press conferences in the Green Bay facility without wearing a mask. Because he was secretly unvaccinated, Rodgers violated the rules.",
-            publishedAt = "2021-11-04T03:21:00Z"
+            publishedAt = "2019-11-04T03:21:00Z"
         ),
         NewsData(
             5,
@@ -46,7 +46,7 @@ object MockData {
             author = "Grant Brisbee",
             title = "Buster Posey's career was like no other in Giants history - The Athletic",
             description = "There was a franchise without Buster Posey, and there was one with him, and those two franchises were radically, impossibly different.",
-            publishedAt = "2021-11-04T02:12:54Z"
+            publishedAt = "2022-11-04T02:12:54Z"
         ),
         NewsData(
             6,
