@@ -79,7 +79,11 @@ fun NavGraphBuilder.bottomNavigation(
         Categories(
             newsManager = newsManager,
             onFetchCategory = {
+                newsManager.getArticlesByCategory("general")
+                newsManager.onSelectedCategoryChanged("general")
+
                 newsManager.onSelectedCategoryChanged(it)
+                newsManager.getArticlesByCategory(it)
             }
         )
     }

@@ -45,6 +45,8 @@ fun Categories(onFetchCategory: (String) -> Unit = {}, newsManager: NewsManager)
                 )
             }
         }
+
+        ArticleContent(articles = newsManager.getArticleByCategory.value.articles ?: listOf())
     }
 }
 
@@ -118,13 +120,13 @@ fun ArticleContent(
                         ) {
                             Text(
                                 text = article.author ?: "Author not mentioned",
-                                color = Slate700
+                                color = Slate700,
                             )
 
                             Text(
                                 text = MockData.stringToDate(
                                     article.publishedAt ?: "2022-11-04T04:42:40Z"
-                                ).getTimeAgo()
+                                ).getTimeAgo(),
                             )
                         }
                     }
