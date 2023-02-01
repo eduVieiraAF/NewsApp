@@ -11,8 +11,11 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,12 +29,14 @@ import com.example.newsapp.MockData
 import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.NewsData
 import com.example.newsapp.R
+import com.example.newsapp.models.TopNewsArticle
 import com.example.newsapp.ui.theme.Slate500
 import com.example.newsapp.ui.theme.Slate700
+import com.skydoves.landscapist.coil.CoilImage
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(scrollState: ScrollState, newsData: NewsData, navController: NavController) {
+fun DetailScreen(scrollState: ScrollState, article: TopNewsArticle, navController: NavController) {
     Scaffold(
         topBar = { DetailTopBar(onBackPressed = { navController.popBackStack() }) }
     ) {
@@ -43,10 +48,10 @@ fun DetailScreen(scrollState: ScrollState, newsData: NewsData, navController: Na
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = newsData.title,
+                text = article.title ?: "|| No title provided ||",
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 color = Slate700,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -54,10 +59,11 @@ fun DetailScreen(scrollState: ScrollState, newsData: NewsData, navController: Na
                     .padding(vertical = 8.dp, horizontal = 6.dp)
             )
 
-            Image(
-                painter = painterResource(id = newsData.image),
-                contentDescription = newsData.title,
-                modifier = Modifier.padding(horizontal = 16.dp)
+            CoilImage(
+                imageModel = article.urlToImage,
+                contentScale = ContentScale.Crop,
+                error = ImageBitmap.imageResource(R.drawable.breaking_news),
+                placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
             )
 
             Row(
@@ -68,21 +74,21 @@ fun DetailScreen(scrollState: ScrollState, newsData: NewsData, navController: Na
             ) {
                 InfoWithIcon(
                     icon = Icons.Default.Edit,
-                    info = newsData.author
+                    info = article.author ?: "Not Available"
                 )
                 InfoWithIcon(
                     icon = Icons.Default.DateRange,
-                    info = MockData.stringToDate(newsData.publishedAt).getTimeAgo()
+                    info = MockData.stringToDate(article.publishedAt!!).getTimeAgo()
                 )
             }
 
             Divider(color = Slate700, modifier = Modifier.padding(bottom = 16.dp))
 
             Text(
-                text = newsData.description,
+                text = article.description ?: "Article Missing",
                 textAlign = TextAlign.Justify,
                 color = Slate700,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp)
@@ -130,13 +136,12 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
 @Composable
 fun ShowDetailScreen() {
     DetailScreen(
-        rememberScrollState(), NewsData(
-            4,
-            R.drawable.michael,
-            author = "Mike Florio",
-            title = "Aaron Rodgers violated COVID protocol by doing maskless indoor press conferences - NBC Sports",
-            description = "Packers quarterback Aaron Rodgers has been conducting in-person press conferences in the Green Bay facility without wearing a mask. Because he was secretly unvaccinated, Rodgers violated the rules.",
-            publishedAt = "2021-11-04T03:21:00Z"
+        rememberScrollState(),
+        TopNewsArticle(
+            author = "Namita Singh",
+            title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
+            description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",
+            publishedAt = "2021-11-04T04:42:40Z"
         ),
         rememberNavController()
     )

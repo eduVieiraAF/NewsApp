@@ -1,36 +1,35 @@
 package com.example.newsapp.ui.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.MockData
 import com.example.newsapp.MockData.getTimeAgo
-import com.example.newsapp.NewsData
+import com.example.newsapp.R
+import com.example.newsapp.models.TopNewsArticle
 import com.example.newsapp.ui.theme.Slate500
 import com.example.newsapp.ui.theme.Slate700
+import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
-fun TopNews(navController: NavController) {
+fun TopNews(navController: NavController, articles: List<TopNewsArticle>) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -47,11 +46,11 @@ fun TopNews(navController: NavController) {
         Divider(color = Slate500, modifier = Modifier.padding(top = 2.dp, bottom = 2.dp))
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(MockData.topNewsList) { newsData ->
+            items(articles.size) { index ->
                 TopNewsItem(
-                    newsData = newsData,
+                    article = articles[index],
                     onNewsClicked = {
-                        navController.navigate("Detail/${newsData.id}")
+                        navController.navigate("Detail/${index}")
                     }
                 )
             }
@@ -60,21 +59,21 @@ fun TopNews(navController: NavController) {
 }
 
 @Composable
-fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
-    Row(
+fun TopNewsItem(article: TopNewsArticle, onNewsClicked: () -> Unit = {}) {
+    Column(
         modifier = Modifier
-            .height(130.dp)
+            .height(230.dp)
             .padding(8.dp)
+            .fillMaxSize()
             .clickable { onNewsClicked() }
     ) {
-        Image(
-            painter = painterResource(id = newsData.image),
-            contentDescription = newsData.title,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .padding(horizontal = 70.dp)
-                .border(1.dp, color = Slate700)
+        CoilImage(
+            imageModel = article.urlToImage,
+            contentScale = ContentScale.Crop,
+            error = ImageBitmap.imageResource(R.drawable.breaking_news),
+            placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
         )
+
     }
 
     Column(
@@ -86,7 +85,7 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
     ) {
 
         Text(
-            text = newsData.title,
+            text = article.title!!,
             color = Slate700,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
@@ -97,16 +96,16 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
         )
 
         Text(
-            text = "|| ${MockData.stringToDate(newsData.publishedAt).getTimeAgo()} ||",
+            text = MockData.stringToDate(article.publishedAt!!).getTimeAgo(),
             color = Slate700,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(21.dp)
+                .padding(8.dp)
                 .fillMaxWidth(),
         )
 
-        Divider(color = Slate500, modifier = Modifier.padding(vertical = 6.dp))
+        Divider(color = Slate500, modifier = Modifier.padding(vertical = 2.dp))
     }
 }
 
@@ -114,5 +113,12 @@ fun TopNewsItem(newsData: NewsData, onNewsClicked: () -> Unit = {}) {
 @Preview(showBackground = true)
 @Composable
 fun ShowTopNews() {
-    TopNews(rememberNavController())
+    TopNewsItem(
+        TopNewsArticle(
+            author = "Namita Singh",
+            title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
+            description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",
+            publishedAt = "2021-11-04T04:42:40Z"
+        )
+    )
 }
