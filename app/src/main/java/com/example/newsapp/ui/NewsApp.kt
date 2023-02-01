@@ -13,7 +13,6 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.newsapp.MockData
 import com.example.newsapp.components.BottomMenu
 import com.example.newsapp.models.TopNewsArticle
 import com.example.newsapp.network.NewsManager
@@ -50,7 +49,7 @@ fun Navigation(
             startDestination = BottomMenuScreen.TopNews.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            bottomNavigation(navController, articles)
+            bottomNavigation(navController, articles, newsManager)
 
             composable(
                 "Detail/{index}",
@@ -67,13 +66,22 @@ fun Navigation(
     }
 }
 
-fun NavGraphBuilder.bottomNavigation(navController: NavController, articles: List<TopNewsArticle>) {
+fun NavGraphBuilder.bottomNavigation(
+    navController: NavController,
+    articles: List<TopNewsArticle>,
+    newsManager: NewsManager
+) {
     composable(BottomMenuScreen.TopNews.route) {
         TopNews(navController = navController, articles)
     }
 
     composable(BottomMenuScreen.Categories.route) {
-        Categories()
+        Categories(
+            newsManager = newsManager,
+            onFetchCategory = {
+                newsManager.onSelectedCategoryChanged(it)
+            }
+        )
     }
 
     composable(BottomMenuScreen.Sources.route) {
