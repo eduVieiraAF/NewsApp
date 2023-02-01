@@ -71,7 +71,7 @@ fun TopNewsItem(article: TopNewsArticle, onNewsClicked: () -> Unit = {}) {
             imageModel = article.urlToImage,
             contentScale = ContentScale.Crop,
             error = ImageBitmap.imageResource(R.drawable.breaking_news),
-            placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
+            placeHolder = ImageBitmap.imageResource(R.drawable.loading)
         )
 
     }

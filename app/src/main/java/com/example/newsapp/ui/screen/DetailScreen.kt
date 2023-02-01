@@ -61,7 +61,7 @@ fun DetailScreen(scrollState: ScrollState, article: TopNewsArticle, navControlle
                 imageModel = article.urlToImage,
                 contentScale = ContentScale.Crop,
                 error = ImageBitmap.imageResource(R.drawable.breaking_news),
-                placeHolder = ImageBitmap.imageResource(R.drawable.breaking_news)
+                placeHolder = ImageBitmap.imageResource(R.drawable.loading)
             )
 
             Row(
