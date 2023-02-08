@@ -23,7 +23,7 @@ fun Sources(newsManager: NewsManager) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "${newsManager.sourceName.value} • Source") },
+                title = { Text(text = newsManager.sourceName.value) },
                 actions = {
                     var menuExpanded by remember { mutableStateOf(false) }
                     IconButton(onClick = { menuExpanded = true }) {
