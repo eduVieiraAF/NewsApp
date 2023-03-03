@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.newsapp.MockData
 import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.R
-import com.example.newsapp.models.TopNewsArticle
+import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.models.getAllArticleCategories
 import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.theme.Slate700
@@ -81,7 +81,7 @@ fun CategoryTab(
 
 @Composable
 fun ArticleContent(
-    articles: List<TopNewsArticle>,
+    articles: List<TopNewsArticles>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn {
@@ -141,7 +141,7 @@ fun ArticleContent(
 fun ShowArticleContent() {
     ArticleContent(
         articles = listOf(
-            TopNewsArticle(
+            TopNewsArticles(
                 author = "Someone who wrote it",
                 title = "This is some title",
                 description = "Describes in detail whatever the title reads and informs the reader",

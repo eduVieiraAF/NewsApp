@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -20,35 +21,51 @@ import androidx.navigation.NavController
 import com.example.newsapp.MockData
 import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.R
-import com.example.newsapp.models.TopNewsArticle
+import com.example.newsapp.components.SearchBar
+import com.example.newsapp.models.TopNewsArticles
+import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.theme.Slate500
 import com.example.newsapp.ui.theme.Slate700
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
-fun TopNews(navController: NavController, articles: List<TopNewsArticle>) {
+fun TopNews(
+    navController: NavController,
+    articles: List<TopNewsArticles>,
+    query: MutableState<String>,
+    newsManager: NewsManager
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+        /* Text(
             text = "Top News",
             fontWeight = FontWeight.Bold,
             fontSize = 38.sp,
             color = Slate700,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
-        )
+        ) */
+
+        SearchBar(query, newsManager)
+
+        val resultList = mutableListOf<TopNewsArticles>()
+        val searchedText = query.value
+
+        if (searchedText.isNotEmpty()) {
+            resultList.addAll(newsManager.getArticleByQuery.value.articles ?: articles)
+        } else resultList.addAll(articles)
 
         Divider(color = Slate500, modifier = Modifier.padding(top = 8.dp))
         Divider(color = Slate500, modifier = Modifier.padding(top = 2.dp, bottom = 2.dp))
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(articles.size) { index ->
+            items(resultList.size) { index ->
                 TopNewsItem(
-                    article = articles[index],
+                    article = resultList[index],
                     onNewsClicked = {
                         navController.navigate("Detail/${index}")
                     }
@@ -59,7 +76,7 @@ fun TopNews(navController: NavController, articles: List<TopNewsArticle>) {
 }
 
 @Composable
-fun TopNewsItem(article: TopNewsArticle, onNewsClicked: () -> Unit = {}) {
+fun TopNewsItem(article: TopNewsArticles, onNewsClicked: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .height(230.dp)
@@ -83,27 +100,29 @@ fun TopNewsItem(article: TopNewsArticle, onNewsClicked: () -> Unit = {}) {
             .clickable { onNewsClicked() },
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-
-        Text(
-            text = article.title!!,
-            color = Slate700,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-        )
-
-        Text(
-            text = MockData.stringToDate(article.publishedAt!!).getTimeAgo(),
-            color = Slate700,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
-        )
+        article.publishedAt?.let {
+            Text(
+                text = MockData.stringToDate(article.publishedAt).getTimeAgo(),
+                color = Slate700,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+            )
+        }
+        article.title?.let {
+            Text(
+                text = article.title,
+                color = Slate700,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+            )
+        }
 
         Divider(color = Slate500, modifier = Modifier.padding(vertical = 2.dp))
     }
@@ -114,7 +133,7 @@ fun TopNewsItem(article: TopNewsArticle, onNewsClicked: () -> Unit = {}) {
 @Composable
 fun ShowTopNews() {
     TopNewsItem(
-        TopNewsArticle(
+        TopNewsArticles(
             author = "Namita Singh",
             title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
             description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",

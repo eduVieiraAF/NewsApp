@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.components.BottomMenu
-import com.example.newsapp.models.TopNewsArticle
+import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.screen.*
 
@@ -40,10 +40,13 @@ fun Navigation(
     newsManager: NewsManager = NewsManager(),
     paddingValues: PaddingValues
 ) {
-    val articles = newsManager.newsResponse.value.articles
+    val articles = mutableListOf(TopNewsArticles())
+    articles
+        .addAll(newsManager.getArticleByQuery.value.articles ?: listOf(TopNewsArticles()))
+
     Log.d("News", "$articles")
 
-    articles?.let {
+    articles.let {
         NavHost(
             navController = navController,
             startDestination = BottomMenuScreen.TopNews.route,
@@ -57,6 +60,16 @@ fun Navigation(
             ) { navBackStackEntry ->
                 val index = navBackStackEntry.arguments?.getInt("index")
                 index?.let {
+                    if (newsManager.query.value.isNotEmpty()) {
+                        articles.clear()
+                        articles
+                            .addAll(newsManager.getArticleByQuery.value.articles ?: listOf())
+                    } else {
+                        articles.clear()
+                        articles
+                            .addAll(newsManager.getArticleByQuery.value.articles ?: listOf())
+                    }
+
                     val article = articles[index]
 
                     DetailScreen(scrollState, article, navController)
@@ -68,19 +81,19 @@ fun Navigation(
 
 fun NavGraphBuilder.bottomNavigation(
     navController: NavController,
-    articles: List<TopNewsArticle>,
+    articles: List<TopNewsArticles>,
     newsManager: NewsManager
 ) {
     composable(BottomMenuScreen.TopNews.route) {
-        TopNews(navController = navController, articles)
+        TopNews(navController = navController, articles, newsManager.query, newsManager)
     }
 
     composable(BottomMenuScreen.Categories.route) {
         Categories(
             newsManager = newsManager,
             onFetchCategory = {
-                newsManager.getArticlesByCategory("general")
-                newsManager.onSelectedCategoryChanged("general")
+                newsManager.getArticlesByCategory("business")
+                newsManager.onSelectedCategoryChanged("business")
 
                 newsManager.onSelectedCategoryChanged(it)
                 newsManager.getArticlesByCategory(it)

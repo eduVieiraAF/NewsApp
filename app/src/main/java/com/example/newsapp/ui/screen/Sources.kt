@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.newsapp.R
-import com.example.newsapp.models.TopNewsArticle
+import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.theme.Slate700
 
@@ -82,7 +82,7 @@ fun Sources(newsManager: NewsManager) {
 }
 
 @Composable
-fun SourceContent(articles: List<TopNewsArticle>) {
+fun SourceContent(articles: List<TopNewsArticles>) {
     val uriHandler = LocalUriHandler.current
 
     LazyColumn {

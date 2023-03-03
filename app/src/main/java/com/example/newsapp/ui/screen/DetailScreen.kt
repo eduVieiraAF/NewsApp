@@ -27,14 +27,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.MockData
 import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.R
-import com.example.newsapp.models.TopNewsArticle
+import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.ui.theme.Slate500
 import com.example.newsapp.ui.theme.Slate700
 import com.skydoves.landscapist.coil.CoilImage
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(scrollState: ScrollState, article: TopNewsArticle, navController: NavController) {
+fun DetailScreen(scrollState: ScrollState, article: TopNewsArticles, navController: NavController) {
     Scaffold(
         topBar = { DetailTopBar(onBackPressed = { navController.popBackStack() }) }
     ) {
@@ -135,7 +135,7 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
 fun ShowDetailScreen() {
     DetailScreen(
         rememberScrollState(),
-        TopNewsArticle(
+        TopNewsArticles(
             author = "Namita Singh",
             title = "Cleo Smith news — live: Kidnap suspect 'in hospital again' as 'hard police grind' credited for breakthrough - The Independent",
             description = "The suspected kidnapper of four-year-old Cleo Smith has been treated in hospital for a second time amid reports he was “attacked” while in custody.",

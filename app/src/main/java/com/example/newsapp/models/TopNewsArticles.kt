@@ -1,6 +1,6 @@
 package com.example.newsapp.models
 
-data class TopNewsArticle(
+data class TopNewsArticles(
     val source: Source? = null,
     val author: String? = null,
     val title: String? = null,
