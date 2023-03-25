@@ -13,9 +13,9 @@ interface NewsService {
     suspend fun getArticlesByCategory(@Query("category") category: String): TopNewsResponse
 
     @GET("everything")
-    suspend fun getArticlesBySources(@Query("sources") sources: String): TopNewsResponse
+    fun getArticlesBySources(@Query("sources") sources: String): Call<TopNewsResponse>
 
     @GET("everything")
-    suspend fun getArticlesByQuery(@Query("q") query: String): TopNewsResponse
+    fun getArticlesByQuery(@Query("q") query: String): Call<TopNewsResponse>
 
 }

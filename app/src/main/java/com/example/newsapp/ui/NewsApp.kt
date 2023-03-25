@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -20,10 +21,14 @@ import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.screen.*
 
 @Composable
-fun NewsApp() {
+fun NewsApp(mainViewModel: MainViewModel) {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
-    MainScreen(navController = navController, scrollState = scrollState)
+    MainScreen(
+        navController = navController,
+        scrollState = scrollState,
+        mainViewModel = mainViewModel
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -47,8 +52,8 @@ fun Navigation(
     viewModel: MainViewModel
 ) {
     val articles = mutableListOf(TopNewsArticles())
-    articles
-        .addAll(newsManager.getArticleByQuery.value.articles ?: listOf(TopNewsArticles()))
+    val topArticles = viewModel.newsResponse.collectAsState().value.articles
+    articles.addAll(topArticles ?: listOf())
 
     Log.d("News", "$articles")
 
@@ -58,7 +63,7 @@ fun Navigation(
             startDestination = BottomMenuScreen.TopNews.route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            bottomNavigation(navController, articles, newsManager)
+            bottomNavigation(navController, articles, newsManager, viewModel)
 
             composable(
                 "Detail/{index}",
@@ -73,7 +78,7 @@ fun Navigation(
                     } else {
                         articles.clear()
                         articles
-                            .addAll(newsManager.getArticleByQuery.value.articles ?: listOf())
+                            .addAll(viewModel.newsResponse.value.articles ?: listOf())
                     }
 
                     val article = articles[index]
@@ -88,20 +93,22 @@ fun Navigation(
 fun NavGraphBuilder.bottomNavigation(
     navController: NavController,
     articles: List<TopNewsArticles>,
-    newsManager: NewsManager
+    newsManager: NewsManager,
+    viewModel: MainViewModel
 ) {
     composable(BottomMenuScreen.TopNews.route) {
         TopNews(navController = navController, articles, newsManager.query, newsManager)
     }
 
     composable(BottomMenuScreen.Categories.route) {
+        viewModel.getArticleByCategory("business")
+        viewModel.onSelectedCategoryChanged("business")
+
         Categories(
-            newsManager = newsManager,
+            viewModel = viewModel,
             onFetchCategory = {
-                // newsManager.getArticlesByCategory("business")
-                newsManager.onSelectedCategoryChanged("business")
-                newsManager.onSelectedCategoryChanged(it)
-                newsManager.getArticlesByCategory(it)
+                viewModel.onSelectedCategoryChanged(it)
+                viewModel.getArticleByCategory(it)
             }
         )
     }
