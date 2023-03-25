@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.components.BottomMenu
 import com.example.newsapp.models.TopNewsArticles
+import com.example.newsapp.network.Api
 import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.screen.*
 
@@ -27,9 +28,13 @@ fun NewsApp() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
+fun MainScreen(
+    navController: NavHostController,
+    scrollState: ScrollState,
+    mainViewModel: MainViewModel
+) {
     Scaffold(bottomBar = { BottomMenu(navController = navController) }) {
-        Navigation(navController, scrollState, paddingValues = it)
+        Navigation(navController, scrollState, paddingValues = it, viewModel = mainViewModel)
     }
 }
 
@@ -37,8 +42,9 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
 fun Navigation(
     navController: NavHostController,
     scrollState: ScrollState,
-    newsManager: NewsManager = NewsManager(),
-    paddingValues: PaddingValues
+    newsManager: NewsManager = NewsManager(Api.retrofitService),
+    paddingValues: PaddingValues,
+    viewModel: MainViewModel
 ) {
     val articles = mutableListOf(TopNewsArticles())
     articles
@@ -92,9 +98,8 @@ fun NavGraphBuilder.bottomNavigation(
         Categories(
             newsManager = newsManager,
             onFetchCategory = {
-                newsManager.getArticlesByCategory("business")
+                // newsManager.getArticlesByCategory("business")
                 newsManager.onSelectedCategoryChanged("business")
-
                 newsManager.onSelectedCategoryChanged(it)
                 newsManager.getArticlesByCategory(it)
             }

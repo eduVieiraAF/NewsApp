@@ -5,12 +5,14 @@ import androidx.compose.runtime.*
 import com.example.newsapp.models.ArticleCategory
 import com.example.newsapp.models.TopNewsResponse
 import com.example.newsapp.models.getArticleCategory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class NewsManager {
+class NewsManager(private val service: NewsService) {
     private val _newsResponse = mutableStateOf(TopNewsResponse())
     val newsResponse: State<TopNewsResponse>
         @Composable get() = remember {
@@ -45,21 +47,8 @@ class NewsManager {
         getArticles()
     }
 
-    private fun getArticles() {
-        val service = Api.retrofitService.getArticles("us")
-        service.enqueue(object : Callback<TopNewsResponse> {
-            override fun onResponse(
-                call: Call<TopNewsResponse>,
-                response: Response<TopNewsResponse>
-            ) {
-                if (response.isSuccessful) _newsResponse.value = response.body()!!
-                else Log.e("NewsE", "${_newsResponse.value}")
-            }
-
-            override fun onFailure(call: Call<TopNewsResponse>, t: Throwable) {
-                Log.e("ERROR", "${t.printStackTrace()}")
-            }
-        })
+    suspend fun getArticles(country: String): TopNewsResponse = withContext(Dispatchers.IO) {
+        service.getArticles(country)
     }
 
     fun getArticlesByCategory(category: String) {
