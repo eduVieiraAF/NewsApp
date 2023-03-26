@@ -7,6 +7,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -23,7 +24,7 @@ import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.R
 import com.example.newsapp.components.SearchBar
 import com.example.newsapp.models.TopNewsArticles
-import com.example.newsapp.network.NewsManager
+import com.example.newsapp.ui.MainViewModel
 import com.example.newsapp.ui.theme.Slate500
 import com.example.newsapp.ui.theme.Slate700
 import com.skydoves.landscapist.coil.CoilImage
@@ -33,7 +34,7 @@ fun TopNews(
     navController: NavController,
     articles: List<TopNewsArticles>,
     query: MutableState<String>,
-    newsManager: NewsManager
+    viewModel: MainViewModel
 ) {
     Column(
         modifier = Modifier
@@ -50,13 +51,15 @@ fun TopNews(
             modifier = Modifier.padding(top = 8.dp)
         ) */
 
-        SearchBar(query, newsManager)
+        SearchBar(query, viewModel)
 
         val resultList = mutableListOf<TopNewsArticles>()
         val searchedText = query.value
 
         if (searchedText.isNotEmpty()) {
-            resultList.addAll(newsManager.getArticleByQuery.value.articles ?: articles)
+            resultList.addAll(
+                viewModel.getArticlesByQuery.collectAsState().value.articles ?: articles
+            )
         } else resultList.addAll(articles)
 
         Divider(color = Slate500, modifier = Modifier.padding(top = 8.dp))

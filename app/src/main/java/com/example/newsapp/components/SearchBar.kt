@@ -22,13 +22,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.newsapp.network.Api
 import com.example.newsapp.network.NewsManager
-import com.example.newsapp.ui.theme.Slate500
+import com.example.newsapp.ui.MainViewModel
 import com.example.newsapp.ui.theme.Slate700
 
 @Composable
-fun SearchBar(query: MutableState<String>, newsManager: NewsManager) {
+fun SearchBar(query: MutableState<String>, viewModel: MainViewModel) {
     val localFocusManager = LocalFocusManager.current
 
     Card(
@@ -76,7 +77,7 @@ fun SearchBar(query: MutableState<String>, newsManager: NewsManager) {
             keyboardActions = KeyboardActions(
                 onSearch = {
                     if (query.value != "") {
-                        newsManager.getArticlesByQuery(query.value)
+                        viewModel.getArticlesByQueries(query.value)
                     }
 
                     localFocusManager.clearFocus()
@@ -91,5 +92,5 @@ fun SearchBar(query: MutableState<String>, newsManager: NewsManager) {
 @Preview(showBackground = true)
 @Composable
 fun ShowSearch() {
-    SearchBar(query = mutableStateOf(""), newsManager = NewsManager(Api.retrofitService))
+    SearchBar(query = mutableStateOf(""), viewModel())
 }

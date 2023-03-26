@@ -7,7 +7,7 @@ import java.util.*
 
 
 object MockData {
-    val topNewsList = listOf(
+    private val topNewsList = listOf(
         NewsData(
             1,
             author = "Raja Razek, CNN",

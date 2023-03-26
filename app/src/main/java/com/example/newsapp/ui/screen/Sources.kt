@@ -26,12 +26,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.newsapp.R
 import com.example.newsapp.models.TopNewsArticles
-import com.example.newsapp.network.NewsManager
+import com.example.newsapp.ui.MainViewModel
 import com.example.newsapp.ui.theme.Slate700
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Sources(newsManager: NewsManager) {
+fun Sources(viewModel: MainViewModel) {
     val items = listOf(
         "TechInt" to "tech_int",
         "SportsTalk" to "sTalks",
@@ -43,13 +43,13 @@ fun Sources(newsManager: NewsManager) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = newsManager.sourceName.value) },
+                title = { Text(text = viewModel.sourceName.collectAsState().value) },
                 actions = {
                     var menuExpanded by remember { mutableStateOf(false) }
                     IconButton(onClick = { menuExpanded = true }) {
                         Icon(
                             Icons.Default.MoreVert,
-                            contentDescription = newsManager.sourceName.value
+                            contentDescription = viewModel.sourceName.collectAsState().value
                         )
                     }
 
@@ -62,7 +62,8 @@ fun Sources(newsManager: NewsManager) {
                         ) {
                             items.forEach {
                                 DropdownMenuItem(onClick = {
-                                    newsManager.sourceName.value = it.second
+                                    viewModel.sourceName.value = it.second
+                                    viewModel.getArticlesBySource()
                                     menuExpanded = false
                                 }) {
                                     Text(text = it.first)
@@ -74,10 +75,10 @@ fun Sources(newsManager: NewsManager) {
             )
         }
     ) {
-        newsManager.getArticlesBySource()
+        viewModel.getArticlesBySource()
 
-        val articles = newsManager.getArticleBySource.value
-        SourceContent(articles = articles.articles?: listOf())
+        val articles = viewModel.getArticleBySource.collectAsState().value
+        SourceContent(articles = articles.articles ?: listOf())
     }
 }
 
@@ -126,7 +127,7 @@ fun SourceContent(articles: List<TopNewsArticles>) {
                         maxLines = 4,
                         overflow = TextOverflow.Ellipsis
                     )
-                    
+
                     Card(
                         backgroundColor = Color.White,
                         elevation = 6.dp
@@ -135,10 +136,11 @@ fun SourceContent(articles: List<TopNewsArticles>) {
                             text = annotatedString,
                             modifier = Modifier.padding(6.dp),
                             onClick = {
-                            annotatedString.getStringAnnotations(it, it).firstOrNull()?.let {
-                                result -> if (result.tag == "URL") uriHandler.openUri(result.item)
-                            }
-                        })
+                                annotatedString.getStringAnnotations(it, it).firstOrNull()
+                                    ?.let { result ->
+                                        if (result.tag == "URL") uriHandler.openUri(result.item)
+                                    }
+                            })
                     }
                 }
             }

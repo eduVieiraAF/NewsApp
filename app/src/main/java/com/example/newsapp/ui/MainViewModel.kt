@@ -1,10 +1,6 @@
 package com.example.newsapp.ui
 
 import android.app.Application
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.MainApp
@@ -36,7 +32,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _getArticleByCategory = MutableStateFlow(TopNewsResponse())
     val getArticleByCategory: StateFlow<TopNewsResponse>
-       get() = _getArticleByCategory
+        get() = _getArticleByCategory
 
     private val _selectedCategory: MutableStateFlow<ArticleCategory?> = MutableStateFlow(null)
     val selectedCategory: StateFlow<ArticleCategory?>
@@ -52,9 +48,39 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _isLoading.value = false
     }
 
+    val sourceName = MutableStateFlow("Engadget")
+    private val _getArticleBySource = MutableStateFlow(TopNewsResponse())
+    val getArticleBySource: StateFlow<TopNewsResponse>
+        get() = _getArticleBySource
+
+    val query = MutableStateFlow("")
+    private val _getArticlesByQuery = MutableStateFlow(TopNewsResponse())
+    val getArticlesByQuery: StateFlow<TopNewsResponse>
+        get() = _getArticlesByQuery
+
     fun onSelectedCategoryChanged(category: String) {
         val newCategory = getArticleCategory(category)
 
         _selectedCategory.value = newCategory
+    }
+
+    fun getArticlesBySource() {
+        _isLoading.value = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _getArticleBySource.value = repository.getArticlesBySource(sourceName.value)
+        }
+
+        _isLoading.value = false
+    }
+
+    fun getArticlesByQueries(query: String) {
+        _isLoading.value = true
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _getArticlesByQuery.value = repository.getArticlesByQuery(query)
+        }
+
+        _isLoading.value = false
     }
 }

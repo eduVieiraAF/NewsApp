@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -16,8 +18,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.components.BottomMenu
 import com.example.newsapp.models.TopNewsArticles
-import com.example.newsapp.network.Api
-import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.screen.*
 
 @Composable
@@ -47,7 +47,6 @@ fun MainScreen(
 fun Navigation(
     navController: NavHostController,
     scrollState: ScrollState,
-    newsManager: NewsManager = NewsManager(Api.retrofitService),
     paddingValues: PaddingValues,
     viewModel: MainViewModel
 ) {
@@ -57,34 +56,34 @@ fun Navigation(
 
     Log.d("News", "$articles")
 
-    articles.let {
-        NavHost(
-            navController = navController,
-            startDestination = BottomMenuScreen.TopNews.route,
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            bottomNavigation(navController, articles, newsManager, viewModel)
+    NavHost(
+        navController = navController,
+        startDestination = BottomMenuScreen.TopNews.route,
+        modifier = Modifier.padding(paddingValues)
+    ) {
+        val queryState = mutableStateOf(viewModel.query.value)
 
-            composable(
-                "Detail/{index}",
-                arguments = listOf(navArgument("index") { type = NavType.IntType })
-            ) { navBackStackEntry ->
-                val index = navBackStackEntry.arguments?.getInt("index")
-                index?.let {
-                    if (newsManager.query.value.isNotEmpty()) {
-                        articles.clear()
-                        articles
-                            .addAll(newsManager.getArticleByQuery.value.articles ?: listOf())
-                    } else {
-                        articles.clear()
-                        articles
-                            .addAll(viewModel.newsResponse.value.articles ?: listOf())
-                    }
+        bottomNavigation(navController, articles, queryState, viewModel)
 
-                    val article = articles[index]
-
-                    DetailScreen(scrollState, article, navController)
+        composable(
+            "Detail/{index}",
+            arguments = listOf(navArgument("index") { type = NavType.IntType })
+        ) { navBackStackEntry ->
+            val index = navBackStackEntry.arguments?.getInt("index")
+            index?.let {
+                if (queryState.value != "") {
+                    articles.clear()
+                    articles
+                        .addAll(viewModel.getArticlesByQuery.value.articles ?: listOf())
+                } else {
+                    articles.clear()
+                    articles
+                        .addAll(viewModel.newsResponse.value.articles ?: listOf())
                 }
+
+                val article = articles[index]
+
+                DetailScreen(scrollState, article, navController)
             }
         }
     }
@@ -93,11 +92,11 @@ fun Navigation(
 fun NavGraphBuilder.bottomNavigation(
     navController: NavController,
     articles: List<TopNewsArticles>,
-    newsManager: NewsManager,
+    query: MutableState<String>,
     viewModel: MainViewModel
 ) {
     composable(BottomMenuScreen.TopNews.route) {
-        TopNews(navController = navController, articles, newsManager.query, newsManager)
+        TopNews(navController = navController, articles, query, viewModel)
     }
 
     composable(BottomMenuScreen.Categories.route) {
@@ -114,6 +113,6 @@ fun NavGraphBuilder.bottomNavigation(
     }
 
     composable(BottomMenuScreen.Sources.route) {
-        Sources(newsManager)
+        Sources(viewModel)
     }
 }

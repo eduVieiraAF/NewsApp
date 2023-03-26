@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -26,7 +27,6 @@ import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.R
 import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.models.getAllArticleCategories
-import com.example.newsapp.network.NewsManager
 import com.example.newsapp.ui.MainViewModel
 import com.example.newsapp.ui.theme.Slate700
 import com.skydoves.landscapist.coil.CoilImage
@@ -44,12 +44,14 @@ fun Categories(onFetchCategory: (String) -> Unit = {}, viewModel: MainViewModel)
                 CategoryTab(
                     category = category.categoryName,
                     onFetchCategory = onFetchCategory,
-                    isSelected = viewModel.selectedCategory.value == category
+                    isSelected = viewModel.selectedCategory.collectAsState().value == category
                 )
             }
         }
 
-        ArticleContent(articles = viewModel.getArticleByCategory.value.articles ?: listOf())
+        ArticleContent(
+            articles = viewModel.getArticleByCategory.collectAsState().value.articles ?: listOf()
+        )
     }
 }
 
@@ -109,7 +111,7 @@ fun ArticleContent(
                         modifier.padding(8.dp)
                     ) {
                         Text(
-                            text = article.title!! ?: "Title missing",
+                            text = article.title ?: "Title missing",
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             maxLines = 3,
