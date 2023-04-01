@@ -22,6 +22,8 @@ import androidx.navigation.NavController
 import com.example.newsapp.MockData
 import com.example.newsapp.MockData.getTimeAgo
 import com.example.newsapp.R
+import com.example.newsapp.components.ErrorLoadingUI
+import com.example.newsapp.components.LoadingUI
 import com.example.newsapp.components.SearchBar
 import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.ui.MainViewModel
@@ -34,7 +36,10 @@ fun TopNews(
     navController: NavController,
     articles: List<TopNewsArticles>,
     query: MutableState<String>,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    isLoading: MutableState<Boolean>,
+    isError: MutableState<Boolean>
+
 ) {
     Column(
         modifier = Modifier
@@ -62,19 +67,25 @@ fun TopNews(
             )
         } else resultList.addAll(articles)
 
-        Divider(color = Slate500, modifier = Modifier.padding(top = 8.dp))
-        Divider(color = Slate500, modifier = Modifier.padding(top = 2.dp, bottom = 2.dp))
-
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(resultList.size) { index ->
-                TopNewsItem(
-                    article = resultList[index],
-                    onNewsClicked = {
-                        navController.navigate("Detail/${index}")
+        when {
+            isLoading.value -> { LoadingUI() }
+            isError.value -> { ErrorLoadingUI() }
+            else -> {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(resultList.size) { index ->
+                        TopNewsItem(
+                            article = resultList[index],
+                            onNewsClicked = {
+                                navController.navigate("Detail/${index}")
+                            }
+                        )
                     }
-                )
+                }
             }
         }
+
+        Divider(color = Slate500, modifier = Modifier.padding(top = 8.dp))
+        Divider(color = Slate500, modifier = Modifier.padding(top = 2.dp, bottom = 2.dp))
     }
 }
 

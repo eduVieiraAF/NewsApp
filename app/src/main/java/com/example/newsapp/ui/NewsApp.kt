@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -50,6 +47,8 @@ fun Navigation(
     paddingValues: PaddingValues,
     viewModel: MainViewModel
 ) {
+    val loading by viewModel.isLoading.collectAsState()
+    val error by viewModel.isError.collectAsState()
     val articles = mutableListOf(TopNewsArticles())
     val topArticles = viewModel.newsResponse.collectAsState().value.articles
     articles.addAll(topArticles ?: listOf())
@@ -63,7 +62,10 @@ fun Navigation(
     ) {
         val queryState = mutableStateOf(viewModel.query.value)
 
-        bottomNavigation(navController, articles, queryState, viewModel)
+        val isLoading = mutableStateOf(loading)
+        val isError = mutableStateOf(error)
+
+        bottomNavigation(navController, articles, queryState, viewModel, isLoading, isError)
 
         composable(
             "Detail/{index}",
@@ -93,10 +95,19 @@ fun NavGraphBuilder.bottomNavigation(
     navController: NavController,
     articles: List<TopNewsArticles>,
     query: MutableState<String>,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    isLoading: MutableState<Boolean>,
+    isError: MutableState<Boolean>
 ) {
     composable(BottomMenuScreen.TopNews.route) {
-        TopNews(navController = navController, articles, query, viewModel)
+        TopNews(
+            navController,
+            articles,
+            query,
+            viewModel,
+            isLoading,
+            isError
+        )
     }
 
     composable(BottomMenuScreen.Categories.route) {
@@ -108,11 +119,13 @@ fun NavGraphBuilder.bottomNavigation(
             onFetchCategory = {
                 viewModel.onSelectedCategoryChanged(it)
                 viewModel.getArticleByCategory(it)
-            }
+            },
+            isLoading = isLoading,
+            isError = isError
         )
     }
 
     composable(BottomMenuScreen.Sources.route) {
-        Sources(viewModel)
+        Sources(viewModel, isLoading, isError)
     }
 }

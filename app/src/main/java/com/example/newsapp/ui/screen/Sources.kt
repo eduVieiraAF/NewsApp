@@ -25,13 +25,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.newsapp.R
+import com.example.newsapp.components.ErrorLoadingUI
+import com.example.newsapp.components.LoadingUI
 import com.example.newsapp.models.TopNewsArticles
 import com.example.newsapp.ui.MainViewModel
 import com.example.newsapp.ui.theme.Slate700
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Sources(viewModel: MainViewModel) {
+fun Sources(
+    viewModel: MainViewModel,
+    isLoading: MutableState<Boolean>,
+    isError: MutableState<Boolean>
+) {
     val items = listOf(
         "TechInt" to "tech_int",
         "SportsTalk" to "sTalks",
@@ -75,10 +81,16 @@ fun Sources(viewModel: MainViewModel) {
             )
         }
     ) {
-        viewModel.getArticlesBySource()
+        when {
+            isLoading.value -> { LoadingUI() }
+            isError.value -> { ErrorLoadingUI() }
+            else -> {
+                viewModel.getArticlesBySource()
 
-        val articles = viewModel.getArticleBySource.collectAsState().value
-        SourceContent(articles = articles.articles ?: listOf())
+                val articles = viewModel.getArticleBySource.collectAsState().value
+                SourceContent(articles = articles.articles ?: listOf())
+            }
+        }
     }
 }
 
