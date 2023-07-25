@@ -19,6 +19,7 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +69,7 @@ fun DetailScreen(scrollState: ScrollState, article: TopNewsArticles, navControll
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 InfoWithIcon(
                     icon = Icons.Default.Edit,
@@ -76,7 +77,7 @@ fun DetailScreen(scrollState: ScrollState, article: TopNewsArticles, navControll
                 )
                 InfoWithIcon(
                     icon = Icons.Default.DateRange,
-                    info = MockData.stringToDate(article.publishedAt!!).getTimeAgo()
+                    info = MockData.stringToDate(article.publishedAt!!).getTimeAgo(),
                 )
             }
 
@@ -125,7 +126,11 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
             text = info,
             color = Slate500,
             fontSize = 14.sp,
-            modifier = Modifier.padding(10.dp)
+            maxLines = 2,
+            modifier = Modifier
+                .padding(10.dp)
+                .weight(2f, fill = false),
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

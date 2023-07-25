@@ -47,8 +47,8 @@ class NewsManager(private val service: NewsService) {
             service.getArticlesByCategory(category)
         }
 
-    suspend fun getArticlesBySource(): TopNewsResponse = withContext(Dispatchers.IO) {
-        service.getArticlesBySources(sourceName.value)
+    suspend fun getArticlesBySource(source: String): TopNewsResponse = withContext(Dispatchers.IO) {
+        service.getArticlesBySources(source)
     }
 
     suspend fun getArticlesByQuery(query: String): TopNewsResponse = withContext(Dispatchers.IO) {

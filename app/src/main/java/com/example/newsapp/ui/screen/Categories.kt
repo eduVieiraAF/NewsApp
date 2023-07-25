@@ -139,6 +139,10 @@ fun ArticleContent(
                         ) {
                             Text(
                                 text = article.author ?: "Author not mentioned",
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .weight(1f, fill = false),
+                                overflow = TextOverflow.Ellipsis,
                                 color = Slate700,
                             )
 
