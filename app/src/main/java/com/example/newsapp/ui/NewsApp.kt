@@ -1,21 +1,32 @@
 package com.example.newsapp.ui
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import androidx.navigation.*
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.newsapp.components.BottomMenu
 import com.example.newsapp.models.TopNewsArticles
-import com.example.newsapp.ui.screen.*
+import com.example.newsapp.ui.screen.BottomMenuScreen
+import com.example.newsapp.ui.screen.Categories
+import com.example.newsapp.ui.screen.DetailScreen
+import com.example.newsapp.ui.screen.Sources
+import com.example.newsapp.ui.screen.TopNews
 
 @Composable
 fun NewsApp(mainViewModel: MainViewModel) {
@@ -28,7 +39,7 @@ fun NewsApp(mainViewModel: MainViewModel) {
     )
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+//@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     navController: NavHostController,
