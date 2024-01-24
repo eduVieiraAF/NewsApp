@@ -46,8 +46,14 @@ fun Categories(
 
     Column {
         when {
-            isLoading.value -> { LoadingUI() }
-            isError.value -> { ErrorLoadingUI() }
+            isLoading.value -> {
+                LoadingUI()
+            }
+
+            isError.value -> {
+                ErrorLoadingUI()
+            }
+
             else -> {
                 LazyRow {
                     items(tabsItems.size) {
@@ -93,7 +99,6 @@ fun CategoryTab(
             color = Color.White,
             modifier = Modifier
                 .padding(18.dp)
-
         )
     }
 }
