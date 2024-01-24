@@ -23,8 +23,7 @@ class NewsManager(private val service: NewsService) {
             _getArticleBySource
         }
 
-
-    val query = mutableStateOf("")
+    // val query = mutableStateOf("")
 
     private val _getArticleByQuery = mutableStateOf(TopNewsResponse())
     val getArticleByQuery: MutableState<TopNewsResponse>
